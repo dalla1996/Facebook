@@ -2,10 +2,14 @@ package com.example.facebook;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
+
+import static android.content.ContentValues.TAG;
 
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -22,6 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
             COL_4 + " INTEGER ) ; " ;
     public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
+    public static final String SELECT_STUDENT="SELECT * FROM "+TABLE_NAME;
 
     public DBHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, null, 1);
@@ -53,6 +58,28 @@ public class DBHelper extends SQLiteOpenHelper {
             return true;
         }
         return false;
+    }
+    public void getAllStudent(){
+        SQLiteDatabase db=getWritableDatabase();
+        Cursor cursor=db.rawQuery(SELECT_STUDENT,null);
+        if (cursor.moveToFirst()){
+            do {
+                Log.d(TAG,"getStudent Name"+
+                        "Name :"+cursor.getString(cursor.getColumnIndex(COL_2))+
+                        "Age :" +cursor.getString(cursor.getColumnIndex(COL_3))+
+                        "Marks :"+cursor.getString(cursor.getColumnIndex(COL_4)));
+
+
+
+            }while (cursor.moveToNext());
+        }
+    }
+
+
+    public Cursor getAllDetails() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor rs = db.rawQuery("select * from "+TABLE_NAME,null);
+        return rs;
     }
 
 
